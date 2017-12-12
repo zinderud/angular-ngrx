@@ -28,6 +28,14 @@ export interface EntityFilters {
 
 export const ENTITY_FILTERS = new InjectionToken<EntityFilters>('ENTITY_FILTERS');
 
+export function createEntityFiltersProvider(filters: EntityFilters) {
+  return { provide: ENTITY_FILTERS, multi: true, useValue: filters };
+}
+
+export const defaultEntityFilters = createEntityFiltersProvider({
+    '': { filterFn: GenericNameFilterFn }
+});
+
 /** EntityFilter function: match pattern in the entity name. */
 export function GenericNameFilterFn<T>(entities: T[], pattern: string) {
   pattern = pattern && pattern.trim();
@@ -37,11 +45,6 @@ export function GenericNameFilterFn<T>(entities: T[], pattern: string) {
   const regEx = new RegExp(pattern, 'i');
   return entities.filter((e: any) => regEx.test(e.name));
 }
-
-/** The default EntityFilter */
-export const DefaultEntityFilters: EntityFilters = {
-  '': { filterFn: GenericNameFilterFn }
-};
 
 @Injectable()
 export class EntityFilterService {
@@ -97,7 +100,7 @@ export class EntityFilterService {
    *   registerFilter('Hero', MyHeroOnlyFilter);
    */
   registerFilter<T>(name: string, filter: EntityFilterDef<T>) {
-    this.filters[name] = filter;
+    this.filters[name.trim()] = filter;
   }
 
   /**

@@ -2,6 +2,7 @@ export * from './entity.actions';
 export * from './entity-data.service';
 export * from './entity.dispatchers';
 export * from './entity-filter.service';
+export * from './entity-key-generator.service';
 export * from './entity.reducer';
 export * from './entity.selectors';
 export * from './interfaces';

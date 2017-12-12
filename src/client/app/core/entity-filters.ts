@@ -1,7 +1,8 @@
-import { EntityFilters, ENTITY_FILTERS } from '../../ngrx-data';
+import { EntityFilters, createEntityFiltersProvider } from '../../ngrx-data';
 
 /** EntityFilter function: match pattern in the name or the saying. */
-function NameOrSayingFilterFn<T>(entities: T[], pattern: string) {
+// AOT requires export
+export function NameOrSayingFilterFn<T>(entities: T[], pattern: string) {
   pattern = pattern && pattern.trim();
   if (!pattern) {
     return entities;
@@ -13,13 +14,10 @@ function NameOrSayingFilterFn<T>(entities: T[], pattern: string) {
 export const NAME_OR_SAYING_FILTER = 'NameOrSaying';
 
 /** Custom application entity filters */
-const entityFilters: EntityFilters = {
-  [NAME_OR_SAYING_FILTER]: { filterFn: NameOrSayingFilterFn }
+// AOT requires export; cannot write [NAME_OR_SAYING_FILTER]
+export const entityFilters: EntityFilters = {
+  NameOrSaying: { filterFn: NameOrSayingFilterFn }
   // '': { filterFn: NameOrSayingFilterFn } // replace the default
 };
 
-export const entityFiltersProvider = {
-  provide: ENTITY_FILTERS,
-  multi: true,
-  useValue: entityFilters
-};
+export const entityFiltersProvider = createEntityFiltersProvider(entityFilters);

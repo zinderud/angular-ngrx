@@ -97,22 +97,22 @@ export function entityCollectionReducerFactory<T>(filterService: EntityFilterSer
         };
       }
 
-      // Filter getting and setting is tricky because both the existing filter and
-      // incoming payload value could be either a string or an EntityFilter.
-      // The following two reducer actions accept all four possibilities.
-      // SET_FILTER upgrades the filter to an EntityFilter if the pattern is an EntityFilter.
-
       case EntityOp.GET_FILTERED: {
         let filteredEntities: T[];
-        const filter = collection.filter;
+        const filter = collection.filter
+        const entities = collection.entities;
         if (filter) {
-          const { name = '', pattern } = typeof filter === 'string' ? { pattern: filter } : filter;
-          const filterFn = filterService.getFilterFn<T>(name, action.entityName);
-          filteredEntities = filterFn(collection.entities, pattern);
+          const { name = '', pattern } =
+            typeof filter === 'string' ? { pattern: filter } : filter;
+          const filterFn = filterService.getFilterFn<T>(name, action.entityName );
+          const filtered = filterFn(entities, pattern);
+          // if same length, entities and filtered must be equal.
+          filteredEntities = filtered.length === entities.length ? entities : filtered;
         } else {
-          filteredEntities = collection.entities;
+          filteredEntities = entities;
         }
-        return { ...collection, filteredEntities };
+        return collection.filteredEntities === filteredEntities ?
+          collection : { ...collection, filteredEntities };
       }
 
       case EntityOp.SET_FILTER: {
