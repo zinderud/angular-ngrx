@@ -4,7 +4,7 @@ import { Dictionary } from './ngrx-entity-models';
 
 import { Observable } from 'rxjs/Observable';
 
-import { EntityCache, ENTITY_CACHE_NAME, entityName } from './interfaces';
+import { EntityCache, ENTITY_CACHE_NAME } from './interfaces';
 import { EntityCollection } from './entity-definition';
 import { EntityFilterFn } from './entity-filters';
 

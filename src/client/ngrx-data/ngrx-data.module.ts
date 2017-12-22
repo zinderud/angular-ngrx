@@ -15,15 +15,12 @@ import { EntityDataService, EntityDataServiceConfig } from './entity-data.servic
 import { EntityDefinitionService } from './entity-definition.service';
 import { EntityEffects } from './entity.effects';
 import { EntityMetadataMap } from './entity-metadata';
+import { createEntityReducer } from './entity.reducer';
 import { EntitySelectors } from './entity.selectors';
 import { EntityServiceFactory } from './entity.service';
 import { Pluralizer, _Pluralizer } from './pluralizer';
 
 export const entityEffects: any[] = [EntityEffects];
-
-export function getEntityReducer(service: EntityDefinitionService) {
-  return service.getEntityReducer();
-}
 
 export interface NgrxDataModuleConfig {
   entityDataServiceConfig?: EntityDataServiceConfig;
@@ -45,7 +42,7 @@ export interface NgrxDataModuleConfig {
     {
       provide: ENTITY_REDUCER_TOKEN,
       deps: [EntityDefinitionService],
-      useFactory: getEntityReducer
+      useFactory: createEntityReducer
     },
 
     { provide: Pluralizer, useClass: _Pluralizer }
@@ -59,7 +56,7 @@ export class NgrxDataModule {
         { provide: ENTITY_CACHE_NAME_TOKEN, useValue: ENTITY_CACHE_NAME },
         { provide: EntityDataServiceConfig, useValue: config.entityDataServiceConfig },
         { provide: ENTITY_METADATA_TOKEN, multi: true, useValue: config.entityMetadata },
-        { provide: PLURAL_NAMES_TOKEN, useValue: config.pluralNames }
+        { provide: PLURAL_NAMES_TOKEN, multi: true, useValue: config.pluralNames }
       ]
     };
   }
